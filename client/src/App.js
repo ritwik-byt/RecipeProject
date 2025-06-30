@@ -1,23 +1,30 @@
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+  const [recipes, setRecipes] = useState([]);
+
+  useEffect(() => {
+    fetch('https://recipeproject-1gpw.onrender.com/recipes') // ✅ Your deployed backend URL
+      .then((res) => res.json())
+      .then((data) => setRecipes(data))
+      .catch((err) => console.error('Failed to fetch recipes:', err));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Recipe List</h1>
+      {recipes.length === 0 ? (
+        <p>Loading recipes...</p>
+      ) : (
+        <ul>
+          {recipes.map((recipe) => (
+            <li key={recipe._id}>
+              <strong>{recipe.title}</strong>: {recipe.description}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
